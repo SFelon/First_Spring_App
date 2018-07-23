@@ -1,11 +1,8 @@
 package com.sebastianfelon.myfirstspringapp.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 @Entity
 @Table(name = "cars")
@@ -19,16 +16,10 @@ public class Car {
     @Column
     private String carModel;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "car_owner_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private CarOwner carOwner;
 
     public Long getId() {
         return id;
     }
-
 
     public String getCarModel() {
         return carModel;
@@ -38,11 +29,18 @@ public class Car {
         this.carModel = carModel;
     }
 
-    public CarOwner getCarOwner() {
-        return carOwner;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Car car = (Car) o;
+        return Objects.equals(id, car.id) &&
+                Objects.equals(carModel, car.carModel);
     }
 
-    public void setCarOwner(CarOwner carOwner) {
-        this.carOwner = carOwner;
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, carModel);
     }
 }
